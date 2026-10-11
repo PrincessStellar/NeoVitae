@@ -10,11 +10,13 @@ import com.breakinblocks.neovitae.api.sentient.ISentientArmorManager;
 import com.breakinblocks.neovitae.api.sentient.ISentientArmorManager.UpgradeInfo;
 import com.breakinblocks.neovitae.common.datacomponent.NVDataComponents;
 import com.breakinblocks.neovitae.common.datacomponent.SentientStats;
+import com.breakinblocks.neovitae.common.registry.NVRegistries;
 import com.breakinblocks.neovitae.common.sentient.SentientHelper;
 import com.breakinblocks.neovitae.common.sentient.SentientUpgrade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SentientArmorManagerImpl implements ISentientArmorManager {
 
@@ -77,19 +79,19 @@ public class SentientArmorManagerImpl implements ISentientArmorManager {
 
     @Override
     public boolean grantUpgradeExperience(Player player, Identifier upgradeId, float amount) {
-        if (!hasFullSet(player)) {
+        if (amount <= 0 || !hasFullSet(player)) {
             return false;
         }
 
-        List<SentientHelper.UpgradeInstance> upgrades = SentientHelper.getUpgrades(player);
-        for (SentientHelper.UpgradeInstance instance : upgrades) {
-            if (instance.upgrade().unwrapKey().isPresent() &&
-                instance.upgrade().unwrapKey().get().identifier().equals(upgradeId)) {
-                SentientHelper.applyExp(player, instance.upgrade(), amount);
-                return true;
-            }
+        Optional<Holder.Reference<SentientUpgrade>> upgrade = player.level()
+            .registryAccess()
+            .lookupOrThrow(NVRegistries.Keys.SENTIENT_UPGRADES)
+            .get(upgradeId);
+        if (upgrade.isEmpty()) {
+            return false;
         }
-        return false;
+
+        return SentientHelper.applyExp(player, upgrade.get(), amount) > 0;
     }
 
     @Override
