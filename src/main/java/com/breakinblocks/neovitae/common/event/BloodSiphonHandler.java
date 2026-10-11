@@ -23,6 +23,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
@@ -129,9 +130,17 @@ public class BloodSiphonHandler {
     }
 
     @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide() || player.tickCount % 10 != 0) return;
+        ItemSigilDamned.updateBonuses(player);
+    }
+
+    @SubscribeEvent
     public static void onEntityKilled(LivingDeathEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
+        ItemSigilDamned.updateBonuses(player);
         ItemSigilDamned.onKill(player, event.getEntity());
 
         ItemStack offhand = player.getOffhandItem();

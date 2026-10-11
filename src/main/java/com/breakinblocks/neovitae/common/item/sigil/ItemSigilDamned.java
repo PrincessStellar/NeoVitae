@@ -2,24 +2,22 @@ package com.breakinblocks.neovitae.common.item.sigil;
 
 import com.breakinblocks.neovitae.NeoVitae;
 import com.breakinblocks.neovitae.common.attribute.NVAttributes;
-import com.breakinblocks.neovitae.common.datacomponent.Binding;
+import com.breakinblocks.neovitae.spiritus.PlayerSpiritusHandler;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.Level;
-
-import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
+
+import java.util.function.Consumer;
 
 public class ItemSigilDamned extends ItemSigilBase {
 
@@ -32,24 +30,6 @@ public class ItemSigilDamned extends ItemSigilBase {
     }
 
     @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        Binding binding = getBinding(stack);
-        if (binding == null) {
-            return ItemAttributeModifiers.EMPTY;
-        }
-        return ItemAttributeModifiers.builder()
-                .add(NVAttributes.BONUS_SPIRITUS,
-                        new AttributeModifier(SPIRITUS_BONUS_ID, 50, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND)
-                .add(NVAttributes.BONUS_SACRIFICE,
-                        new AttributeModifier(SACRIFICE_BONUS_ID, 25, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND)
-                .add(NVAttributes.BLOOD_SIPHON,
-                        new AttributeModifier(SIPHON_BONUS_ID, 10, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND)
-                .build();
-    }
-    @Override
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {tooltip.accept(Component.translatable("tooltip.neovitae.sigil.damned.spiritus")
                 .withStyle(ChatFormatting.DARK_PURPLE));
@@ -59,16 +39,49 @@ public class ItemSigilDamned extends ItemSigilBase {
                 .withStyle(ChatFormatting.RED));
     }
 
-    public static void onKill(Player player, LivingEntity target) {
-        for (ItemStack stack : List.<ItemStack>of(player.getMainHandItem(), player.getOffhandItem())) {
-            if (stack.getItem() instanceof ItemSigilDamned sigil) {
-                Binding binding = sigil.getBinding(stack);
-                if (binding != null) {
-                    float healAmount = target.getMaxHealth() * 0.1f;
-                    player.heal(Math.min(healAmount, 4.0f));
-                    break;
+    public static boolean isCarried(Player player) {
+        for (ItemStack stack : PlayerSpiritusHandler.getAllInventories(player)) {
+            if (isBoundDamned(stack)) {
+                return true;
+            }
+            if (stack.getItem() instanceof ItemSigilHolding) {
+                for (ItemStack inner : ItemSigilHolding.getInternalInventory(stack)) {
+                    if (isBoundDamned(inner)) {
+                        return true;
+                    }
                 }
             }
+        }
+        return false;
+    }
+
+    private static boolean isBoundDamned(ItemStack stack) {
+        return stack.getItem() instanceof ItemSigilDamned sigil && sigil.getBinding(stack) != null;
+    }
+
+    public static void updateBonuses(Player player) {
+        boolean carried = isCarried(player);
+        applyBonus(player, NVAttributes.BONUS_SPIRITUS, SPIRITUS_BONUS_ID, 50, carried);
+        applyBonus(player, NVAttributes.BONUS_SACRIFICE, SACRIFICE_BONUS_ID, 25, carried);
+        applyBonus(player, NVAttributes.BLOOD_SIPHON, SIPHON_BONUS_ID, 10, carried);
+    }
+
+    private static void applyBonus(Player player, Holder<Attribute> attribute, Identifier id, double amount, boolean carried) {
+        AttributeInstance instance = player.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        if (!carried) {
+            instance.removeModifier(id);
+        } else if (!instance.hasModifier(id)) {
+            instance.addTransientModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
+        }
+    }
+
+    public static void onKill(Player player, LivingEntity target) {
+        if (isCarried(player)) {
+            float healAmount = target.getMaxHealth() * 0.1f;
+            player.heal(Math.min(healAmount, 4.0f));
         }
     }
 }
