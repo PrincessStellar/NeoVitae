@@ -63,7 +63,7 @@ public class TabulaVitaeEntry extends EntryProvider {
         this.pageTitle("Further Transmutations");
         this.pageText("As your skill deepens, so does the table's repertoire:"
                 + "\n\n- [#](8B0000)Plant Oil[#]() extracted from wheat, carrots, potatoes, or beets"
-                + "\n\n- [#](8B0000)Coal Sand[#]() and [#](8B0000)Explosive Powder[#]()"
+                + "\n\n- [#](8B0000)Coal Sand[#]()"
                 + "\n\n- [#](8B0000)Flint[#]() coaxed from gravel"
                 + "\n\n- [#](8B0000)Saltpeter[#]() and [#](8B0000)Gunpowder[#]()");
 

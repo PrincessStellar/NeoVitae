@@ -52,7 +52,10 @@ public class NVTabs {
                         SentientHelper.setDefaultSentient(sentient_plate, parameters.holders());
                         output.accept(sentient_plate);
 
-                        addAll(NVItems.BASIC_ITEMS, output::accept);
+                        List<Item> retired = NVItems.retiredItems();
+                        addAll(NVItems.BASIC_ITEMS, stack -> {
+                            if (!retired.contains(stack.getItem())) output.accept(stack);
+                        });
                         MaterialRegistry.getAllItems()
                                 .forEach(holder -> output.accept(new ItemStack(holder.get())));
                         addFlaskVariants(output::accept);

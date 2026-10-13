@@ -796,7 +796,6 @@ public class NVRecipeProvider extends RecipeProvider {
                 .save(output, rKey(NeoVitae.rl("transcendent_blood_orb")));
 
         deusTool(output, NVItems.DEUS_CUTTING_FLUID.get(), NVItems.ADVANCED_CUTTING_FLUID.get(), "deus_cutting_fluid");
-        deusTool(output, NVItems.DEUS_EXPLOSIVE_CELL.get(), NVItems.HELLFORGED_EXPLOSIVE_CELL.get(), "deus_explosive_cell");
         deusTool(output, NVItems.DEUS_RESONATOR.get(), NVItems.HELLFORGED_RESONATOR.get(), "deus_resonator");
         deusTool(output, NVItems.DEUS_HYDRATION_CELL.get(), NVItems.PRIMITIVE_HYDRATION_CELL.get(), "deus_hydration_cell");
         deusTool(output, NVItems.DEUS_REVERTER.get(), NVItems.SANGUINE_REVERTER.get(), "deus_reverter");
@@ -2680,16 +2679,6 @@ public class NVRecipeProvider extends RecipeProvider {
                 .minimumTier(1)
                 .save(output, "bread");
 
-        // Explosive Powder - gunpowder x2 + coal dust
-        TabulaVitaeRecipeBuilder.build(NVItems.EXPLOSIVE_POWDER.get())
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.GUNPOWDERS)))
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.GUNPOWDERS)))
-                .input(Ingredient.of(items.getOrThrow(NVTags.Items.DUSTS_COAL)))
-                .syphon(500)
-                .ticks(200)
-                .minimumTier(1)
-                .save(output, "explosive_powder");
-
         // Sulfur from lava bucket + cobblestone
         TabulaVitaeRecipeBuilder.build(NVItems.SULFUR.get(), 4)
                 .input(Items.LAVA_BUCKET)
@@ -3503,30 +3492,6 @@ public class NVRecipeProvider extends RecipeProvider {
                 .minimumTier(1)
                 .save(output, "cobweb");
 
-        // Explosive Cell (primitive)
-        TabulaVitaeRecipeBuilder.build(NVItems.PRIMITIVE_EXPLOSIVE_CELL.get())
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.GUNPOWDERS)))
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.DUSTS_REDSTONE)))
-                .input(NVBlocks.WEAK_TAU.item().get())
-                .input(Ingredient.of(items.getOrThrow(NVTags.Items.DUSTS_COAL)))
-                .syphon(1000)
-                .ticks(200)
-                .minimumTier(3)
-                .save(output, "explosive_cell");
-
-        // Hellforged Explosive Cell
-        TabulaVitaeRecipeBuilder.build(NVItems.HELLFORGED_EXPLOSIVE_CELL.get())
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.GUNPOWDERS)))
-                .input(Ingredient.of(items.getOrThrow(NVTags.Items.DUSTS_SULFUR)))
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.DUSTS_REDSTONE)))
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.GEMS_QUARTZ)))
-                .input(Ingredient.of(items.getOrThrow(NVTags.Items.DUSTS_HELLFORGED)))
-                .input(Ingredient.of(items.getOrThrow(NVTags.Items.DUSTS_COAL)))
-                .syphon(4000)
-                .ticks(200)
-                .minimumTier(4)
-                .save(output, "hellforged_explosive_cell");
-
         // Gold Nuggets from Gilded Blackstone
         TabulaVitaeRecipeBuilder.build(Items.GOLD_NUGGET, 9)
                 .input(Items.GILDED_BLACKSTONE)
@@ -4020,13 +3985,6 @@ public class NVRecipeProvider extends RecipeProvider {
                 .save(output, rKey(NeoVitae.rl("blasting/hellforged_ingot_from_dust")));
 
         // === OTHER UTILITY ===
-        // Netherrack to Sulfur + Lava
-        AthanorRecipeBuilder.build(NVTags.Items.EXPLOSIVES)
-                .input(Ingredient.of(items.getOrThrow(Tags.Items.NETHERRACKS)))
-                .guaranteedOutput(NVItems.SULFUR.get())
-                .fluidOutput(Fluids.LAVA, 50)
-                .save(output, rKey(NeoVitae.rl("netherrack_to_sulfur")));
-
         // === POTION TRANSFER RECIPES ===
         // Tipped Amethyst Throwing Dagger - 8 amethyst daggers + lingering flask = 8 tipped daggers
         // The lingering flask's potion effects are transferred to the output daggers

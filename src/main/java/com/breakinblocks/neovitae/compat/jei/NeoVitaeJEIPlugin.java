@@ -425,19 +425,18 @@ public class NeoVitaeJEIPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime runtime) {
         jeiRuntime = runtime;
 
-        runtime.getIngredientManager().removeIngredientsAtRuntime(
-                VanillaTypes.ITEM_STACK,
-                List.of(
-                        new ItemStack(NVItems.BOSS_KEY.get()),
-                        new ItemStack(NVBlocks.SPATIAL_RIFT.item().get()),
-                        new ItemStack(NVItems.RAW_SPIRITUS.get()),
-                        new ItemStack(NVItems.MONSTER_SOUL_RAW.get()),
-                        new ItemStack(NVItems.MONSTER_SOUL_RUINA.get()),
-                        new ItemStack(NVItems.MONSTER_SOUL_NIHILUM.get()),
-                        new ItemStack(NVItems.MONSTER_SOUL_VINDICTA.get()),
-                        new ItemStack(NVItems.MONSTER_SOUL_INVICTUS.get())
-                )
-        );
+        List<ItemStack> hidden = new ArrayList<>(List.of(
+                new ItemStack(NVItems.BOSS_KEY.get()),
+                new ItemStack(NVBlocks.SPATIAL_RIFT.item().get()),
+                new ItemStack(NVItems.RAW_SPIRITUS.get()),
+                new ItemStack(NVItems.MONSTER_SOUL_RAW.get()),
+                new ItemStack(NVItems.MONSTER_SOUL_RUINA.get()),
+                new ItemStack(NVItems.MONSTER_SOUL_NIHILUM.get()),
+                new ItemStack(NVItems.MONSTER_SOUL_VINDICTA.get()),
+                new ItemStack(NVItems.MONSTER_SOUL_INVICTUS.get())
+        ));
+        NVItems.retiredItems().forEach(item -> hidden.add(new ItemStack(item)));
+        runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
     }
 
     private List<FlaskCombinationJEIRecipe> createFlaskCombinationRecipes(List<FlaskRecipe> allFlaskRecipes) {

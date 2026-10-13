@@ -20,7 +20,7 @@ Each slot on the Tabula Vitae can be exposed to a specific side of the block for
 Even the simplest transmutations have their uses. Common Tabula Vitae outputs include:
 
 - Mundane: Grass Block from barren earth, Leather purified from rotten flesh, Bread from raw grain, Clay drawn from sand, String and Cobweb.
-- Industrial: Plant Oil extracted from wheat/carrots/potatoes/beets, Coal Sand, Explosive Powder, Flint from gravel, Saltpeter, Gunpowder.
+- Industrial: Plant Oil extracted from wheat/carrots/potatoes/beets, Coal Sand, Flint from gravel, Saltpeter, Gunpowder.
 - Reagents: Air, Growth, Holding, Magnetism, Mining, Phantom Bridge, Sight, Suppression, Teleposition, Void, Lava and Water reagents (the bases for every **[Sigil](Sigils)**).
 - Vials: the **Tabula Vial** (a glass vessel reinforced with powdered slate, required to hold anointments).
 

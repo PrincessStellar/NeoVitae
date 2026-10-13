@@ -476,7 +476,7 @@ build, so the files shipped inside the jar will not always match the style you a
 ```json
 {
   "type": "neovitae:athanor",
-  "tool": { "tag": "neovitae:athanor_tool/explosives" },
+  "tool": { "tag": "neovitae:athanor_tool/cutting_fluids" },
   "inputs": [
     { "item": "minecraft:iron_ore" }
   ],
@@ -668,7 +668,7 @@ Every Athanor recipe names its tool by tag. The parent tag `athanor_tool` contai
 | Tag | Default contents | Purpose |
 |-----|------------------|---------|
 | `athanor_tool` | All tags below | Anything the Athanor accepts in its tool slot. |
-| `athanor_tool/explosives` | Explosive Powder, Primitive Explosive Cell, Hellforged Explosive Cell | Ore crushing and doubling. |
+| `athanor_tool/explosives` | Empty | No shipped recipe uses it. The explosive tools are retired; add items here to use the tag in your own Athanor recipes. |
 | `athanor_tool/cutting_fluids` | Basic, Intermediate, Advanced Cutting Fluid | Cutting recipes. |
 | `athanor_tool/resonator` | Resonator, Primitive Crystalline Resonator, Hellforged Resonator | Resonance recipes (dungeon stone conversion and others). |
 | `athanor_tool/reverter` | Sanguine Reverter | Reversion recipes that break runes and other crafted blocks back into parts. |

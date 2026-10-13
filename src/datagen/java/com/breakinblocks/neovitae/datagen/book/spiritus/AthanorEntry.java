@@ -136,14 +136,11 @@ public class AthanorEntry extends EntryProvider {
 
         this.page("deus_recipes_1", () -> BookHellfireForgeRecipePageModel.create()
                 .withRecipeId1(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_cutting_fluid"))
-                .withRecipeId2(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_explosive_cell")));
+                .withRecipeId2(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_resonator")));
 
         this.page("deus_recipes_2", () -> BookHellfireForgeRecipePageModel.create()
-                .withRecipeId1(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_resonator"))
-                .withRecipeId2(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_hydration_cell")));
-
-        this.page("deus_recipes_3", () -> BookHellfireForgeRecipePageModel.create()
-                .withRecipeId1(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_reverter")));
+                .withRecipeId1(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_hydration_cell"))
+                .withRecipeId2(Identifier.fromNamespaceAndPath("neovitae", "hellfire_forge/deus_reverter")));
     }
 
     @Override

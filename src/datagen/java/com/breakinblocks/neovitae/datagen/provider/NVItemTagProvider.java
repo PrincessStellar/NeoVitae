@@ -133,11 +133,7 @@ public class NVItemTagProvider extends ItemTagsProvider {
                 .add(NVItems.SANGUINE_REVERTER.get())
                 .add(NVItems.DEUS_REVERTER.get());
 
-        tag(NVTags.Items.EXPLOSIVES)
-                .add(NVItems.EXPLOSIVE_POWDER.get())
-                .add(NVItems.PRIMITIVE_EXPLOSIVE_CELL.get())
-                .add(NVItems.HELLFORGED_EXPLOSIVE_CELL.get())
-                .add(NVItems.DEUS_EXPLOSIVE_CELL.get());
+        tag(NVTags.Items.EXPLOSIVES);
 
         tag(NVTags.Items.RESONATOR)
                 .add(NVItems.RESONATOR.get())

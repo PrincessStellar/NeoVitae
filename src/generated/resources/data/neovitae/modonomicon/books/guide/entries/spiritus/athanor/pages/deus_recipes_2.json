@@ -4,7 +4,7 @@
     "type": "modonomicon:none"
   },
   "id": "deus_recipes_2",
-  "recipe_id_1": "neovitae:hellfire_forge/deus_resonator",
-  "recipe_id_2": "neovitae:hellfire_forge/deus_hydration_cell",
+  "recipe_id_1": "neovitae:hellfire_forge/deus_hydration_cell",
+  "recipe_id_2": "neovitae:hellfire_forge/deus_reverter",
   "sort_number": 13
 }

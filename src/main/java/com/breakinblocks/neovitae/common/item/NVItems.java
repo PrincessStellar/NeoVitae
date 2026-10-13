@@ -37,6 +37,7 @@ import com.breakinblocks.neovitae.common.item.soul.SentientShovelItem;
 import com.breakinblocks.neovitae.common.item.soul.SentientSwordItem;
 import com.breakinblocks.neovitae.ritual.EnumRuneType;
 
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -455,6 +456,10 @@ public class NVItems {
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_IMPRISONMENT = ARRAY_ITEMS.registerItem("array_imprisonment", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.IMPRISONMENT));
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_LIQUIFIED_EXPERIENCE = ARRAY_ITEMS.registerItem("array_liquified_experience", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.LIQUIFIED_EXPERIENCE));
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_MINER = ARRAY_ITEMS.registerItem("array_miner", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.MINER));
+
+    public static List<Item> retiredItems() {
+        return List.of(EXPLOSIVE_POWDER.get(), PRIMITIVE_EXPLOSIVE_CELL.get(), HELLFORGED_EXPLOSIVE_CELL.get(), DEUS_EXPLOSIVE_CELL.get());
+    }
 
     public static void register(IEventBus modBus) {
         BASIC_ITEMS.register(modBus);
