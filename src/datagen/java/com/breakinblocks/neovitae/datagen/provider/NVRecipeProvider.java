@@ -2382,6 +2382,12 @@ public class NVRecipeProvider extends RecipeProvider {
                 .evCost(1)
                 .save(output, "vortex");
 
+        AlchemyArrayEffectRecipeBuilder.effect(AlchemyArrayEffectType.ENDER_SEVER)
+                .base(NVItems.TABULA_ROBUR.get())
+                .added(Ingredient.of(Items.ENDER_EYE))
+                .texture("textures/models/alchemyarrays/enderseverarray.png")
+                .save(output, "ender_sever");
+
         // Deflection Array - imbued slate + diamond
         AlchemyArrayEffectRecipeBuilder.effect(AlchemyArrayEffectType.DEFLECTION)
                 .base(NVItems.TABULA_ANIMATA.get())

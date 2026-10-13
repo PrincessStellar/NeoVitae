@@ -456,6 +456,7 @@ public class NVItems {
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_IMPRISONMENT = ARRAY_ITEMS.registerItem("array_imprisonment", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.IMPRISONMENT));
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_LIQUIFIED_EXPERIENCE = ARRAY_ITEMS.registerItem("array_liquified_experience", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.LIQUIFIED_EXPERIENCE));
     public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_MINER = ARRAY_ITEMS.registerItem("array_miner", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.MINER));
+    public static final DeferredHolder<Item, ArrayEffectItem> ARRAY_ENDER_SEVER = ARRAY_ITEMS.registerItem("array_ender_sever", props -> new ArrayEffectItem(props, AlchemyArrayEffectType.ENDER_SEVER));
 
     public static List<Item> retiredItems() {
         return List.of(EXPLOSIVE_POWDER.get(), PRIMITIVE_EXPLOSIVE_CELL.get(), HELLFORGED_EXPLOSIVE_CELL.get(), DEUS_EXPLOSIVE_CELL.get());

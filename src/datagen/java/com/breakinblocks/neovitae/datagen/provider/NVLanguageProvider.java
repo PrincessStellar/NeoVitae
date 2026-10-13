@@ -1363,6 +1363,8 @@ public class NVLanguageProvider extends LanguageProvider implements ModonomiconL
         addJei("effect.loyal_friends.desc", "Summons and revives your tamed companions");
         addJei("effect.vortex.name", "Vortex Array");
         addJei("effect.vortex.desc", "Pulls nearby entities toward the array and stops endermen from teleporting away. Sneak to resist the pull.");
+        addJei("effect.ender_sever.name", "Ender Sever Array");
+        addJei("effect.ender_sever.desc", "Stops endermen, shulkers and similar creatures from teleporting within 16 blocks of the array");
         addJei("effect.liquified_experience.name", "Array of Liquified Experience");
         addJei("effect.liquified_experience.desc", "Drains Tomes of Peritia in the container below into an adjacent tank of Liquified Experience. A redstone signal reverses it.");
         addJei("effect.imprisonment.name", "Array of Imprisonment");
@@ -1391,6 +1393,7 @@ public class NVLanguageProvider extends LanguageProvider implements ModonomiconL
         add(NVItems.ARRAY_UNDERTOW.get(), "Undertow Array");
         add(NVItems.ARRAY_LOYAL_FRIENDS.get(), "Array of Loyal Friends");
         add(NVItems.ARRAY_VORTEX.get(), "Vortex Array");
+        add(NVItems.ARRAY_ENDER_SEVER.get(), "Ender Sever Array");
         add(NVItems.ARRAY_LIQUIFIED_EXPERIENCE.get(), "Array of Liquified Experience");
         add(NVItems.ARRAY_IMPRISONMENT.get(), "Array of Imprisonment");
         add(NVItems.ARRAY_MINER.get(), "Miner Array");
@@ -1424,6 +1427,7 @@ public class NVLanguageProvider extends LanguageProvider implements ModonomiconL
         add("chat.neovitae.vortex_array.ignore_players", "The vortex will no longer pull players");
         add("chat.neovitae.vortex_array.already_ignoring", "This vortex already ignores players");
         add("chat.neovitae.vortex_array.tabula_removed", "The vortex will pull players again");
+        addTooltip("array_effect.ender_sever", "Stops endermen, shulkers and similar creatures from teleporting within 16 blocks.");
         addTooltip("array_effect.liquified_experience", "Inscribe atop a chest. Experience stored in Tomes of Peritia inside drains into an adjacent tank as Liquified Experience. Power the array with redstone to pull it back out of the tank.");
         addTooltip("array_effect.imprisonment", "Place atop a mob spawner. The next mob killed within 11x11x11 becomes the spawner's new mob, and the array is consumed.");
 
