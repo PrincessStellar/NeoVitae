@@ -51,6 +51,16 @@ public class VortexSigilEntry extends EntryProvider {
                 + "current. Useful for working near your own vortex without being yanked into it.\\\n"
                 + "- A [#](2E8B57)redstone signal[#]() applied to the sigil silences it entirely; nothing within "
                 + "the radius is pulled while the signal is active.");
+
+        this.page("tabula_rasa", () -> BookTextPageModel.create()
+                .withTitle(this.context().pageTitle())
+                .withText(this.context().pageText()));
+        this.pageTitle("A Blank Slate");
+        this.pageText("Right-click a working vortex with a [#](8B0000)Tabula Rasa[#]() to set the slate into the "
+                + "sigil. From then on the vortex [#](2E8B57)ignores every player[#](), whatever they hold and "
+                + "whether or not they sneak. Mobs and other creatures are still drawn in as before.\\\n\\\n"
+                + "Right-click the sigil with an empty hand to take the slate back and the vortex pulls players "
+                + "again. Breaking the sigil also returns the slate.");
     }
 
     @Override

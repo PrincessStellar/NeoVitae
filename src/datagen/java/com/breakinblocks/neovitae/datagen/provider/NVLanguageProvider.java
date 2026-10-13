@@ -1421,6 +1421,9 @@ public class NVLanguageProvider extends LanguageProvider implements ModonomiconL
         addTooltip("array_effect.undertow", "Drives a bubble column through the water above. Right-click to flip between upward (push) and downward (drag).");
         addTooltip("array_effect.loyal_friends", "Summons and revives your tamed companions near the array.");
         addTooltip("array_effect.vortex", "Pulls nearby entities toward the array and stops endermen from teleporting away. Sneak to resist the pull.");
+        add("chat.neovitae.vortex_array.ignore_players", "The vortex will no longer pull players");
+        add("chat.neovitae.vortex_array.already_ignoring", "This vortex already ignores players");
+        add("chat.neovitae.vortex_array.tabula_removed", "The vortex will pull players again");
         addTooltip("array_effect.liquified_experience", "Inscribe atop a chest. Experience stored in Tomes of Peritia inside drains into an adjacent tank as Liquified Experience. Power the array with redstone to pull it back out of the tank.");
         addTooltip("array_effect.imprisonment", "Place atop a mob spawner. The next mob killed within 11x11x11 becomes the spawner's new mob, and the array is consumed.");
 

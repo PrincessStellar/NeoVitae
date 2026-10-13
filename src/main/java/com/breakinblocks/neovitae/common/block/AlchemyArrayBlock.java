@@ -36,8 +36,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import com.breakinblocks.neovitae.common.alchemyarray.AlchemyArrayEffectLight;
 import com.breakinblocks.neovitae.common.alchemyarray.AlchemyArrayEffectMiner;
+import com.breakinblocks.neovitae.common.alchemyarray.AlchemyArrayEffectVortex;
 import com.breakinblocks.neovitae.common.blockentity.AlchemyArrayBlockEntity;
 import com.breakinblocks.neovitae.common.blockentity.NVTiles;
+import com.breakinblocks.neovitae.common.item.NVItems;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.LevelReader;
@@ -133,6 +135,20 @@ public class AlchemyArrayBlock extends BaseEntityBlock implements SimpleWaterlog
             array.setChanged();
             world.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 0.6f, 1.4f);
             player.sendOverlayMessage(Component.translatable("chat.neovitae.light_array.persistent"));
+            return InteractionResult.SUCCESS;
+        }
+
+        if (playerItem.is(NVItems.TABULA_RASA.get()) && array.arrayEffect instanceof AlchemyArrayEffectVortex vortex) {
+            if (world.isClientSide()) return InteractionResult.SUCCESS;
+            if (vortex.isIgnoringPlayers()) {
+                player.sendOverlayMessage(Component.translatable("chat.neovitae.vortex_array.already_ignoring"));
+                return InteractionResult.SUCCESS;
+            }
+            vortex.setIgnorePlayers(true);
+            playerItem.consume(1, player);
+            array.setChanged();
+            world.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 0.6f, 0.8f);
+            player.sendOverlayMessage(Component.translatable("chat.neovitae.vortex_array.ignore_players"));
             return InteractionResult.SUCCESS;
         }
 

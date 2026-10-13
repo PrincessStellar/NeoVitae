@@ -2,9 +2,12 @@ package com.breakinblocks.neovitae.common.alchemyarray;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -13,6 +16,7 @@ import com.breakinblocks.neovitae.common.blockentity.AlchemyArrayBlockEntity;
 import com.breakinblocks.neovitae.common.datacomponent.Anima;
 import com.breakinblocks.neovitae.common.datacomponent.Binding;
 import com.breakinblocks.neovitae.common.item.BloodOrbItem;
+import com.breakinblocks.neovitae.common.item.NVItems;
 import com.breakinblocks.neovitae.util.helper.AnimaHelper;
 
 import java.util.List;
@@ -29,6 +33,16 @@ public class AlchemyArrayEffectVortex extends AlchemyArrayEffect {
     private static final int TELEPORT_SUPPRESS_TICKS = 40;
 
     private static final Map<UUID, Long> teleportSuppression = new ConcurrentHashMap<>();
+
+    private boolean ignorePlayers = false;
+
+    public boolean isIgnoringPlayers() {
+        return ignorePlayers;
+    }
+
+    public void setIgnorePlayers(boolean ignorePlayers) {
+        this.ignorePlayers = ignorePlayers;
+    }
 
     public static boolean isTeleportSuppressed(LivingEntity entity) {
         Long until = teleportSuppression.get(entity.getUUID());
@@ -64,6 +78,7 @@ public class AlchemyArrayEffectVortex extends AlchemyArrayEffect {
         List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area);
         for (LivingEntity entity : entities) {
             if (entity instanceof Player p) {
+                if (ignorePlayers) continue;
                 if (p.isCreative() || p.isSpectator() || p.isShiftKeyDown()) continue;
                 if (p.getMainHandItem().getItem() instanceof BloodOrbItem) continue;
                 if (p.getOffhandItem().getItem() instanceof BloodOrbItem) continue;
@@ -89,10 +104,38 @@ public class AlchemyArrayEffectVortex extends AlchemyArrayEffect {
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {}
+    public boolean onUse(AlchemyArrayBlockEntity tile, Player player) {
+        if (!ignorePlayers) return false;
+        Level level = tile.getLevel();
+        if (level == null || level.isClientSide()) return true;
+        ignorePlayers = false;
+        ItemStack tabula = new ItemStack(NVItems.TABULA_RASA.get());
+        if (!player.getInventory().add(tabula)) {
+            player.drop(tabula, false);
+        }
+        player.sendOverlayMessage(Component.translatable("chat.neovitae.vortex_array.tabula_removed"));
+        tile.setChanged();
+        return true;
+    }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {}
+    public void onRemoved(AlchemyArrayBlockEntity tile) {
+        Level level = tile.getLevel();
+        if (level == null || !ignorePlayers) return;
+        BlockPos pos = tile.getBlockPos();
+        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(NVItems.TABULA_RASA.get()));
+        ignorePlayers = false;
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag tag) {
+        if (ignorePlayers) tag.putBoolean("ignorePlayers", true);
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag tag) {
+        ignorePlayers = tag.getBooleanOr("ignorePlayers", false);
+    }
 
     @Override
     public AlchemyArrayEffect getNewCopy() {
