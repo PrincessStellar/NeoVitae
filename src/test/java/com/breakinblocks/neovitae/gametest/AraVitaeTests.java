@@ -1,10 +1,17 @@
 package com.breakinblocks.neovitae.gametest;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -78,7 +85,8 @@ public final class AraVitaeTests {
 
                 helper.succeedWhen(() -> {
                     ItemStack result = altar.inv.getStackInSlot(0);
-                    helper.assertTrue(!(!result.is(NVItems.TABULA_RASA.get())), "Expected blank slate, got " + result + " (progress=" + altar.getProgress() + ", mainTank=" + altar.getMainTank() + ")");
+                    helper.assertTrue(!(!result.is(NVItems.TABULA_RASA.get())), "Expected blank slate, got " + result + " (progress=" + altar.getProgress() + ", mainTank=" + altar.getMainTank() + ")");
+
                 });
             });
         });
@@ -184,6 +192,31 @@ public final class AraVitaeTests {
                     helper.succeed();
                 });
             });
+        });
+        r.add("ara_vitae/empty_hand_takes_item_out", 40, helper -> {
+            BlockPos rel = new BlockPos(3, 1, 2);
+            helper.setBlock(rel.below(), Blocks.STONE.defaultBlockState());
+            AraVitaeTile altar = placeAltar(helper, rel);
+            if (altar == null) return;
+
+            FakePlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "AltarTester"));
+            BlockPos abs = helper.absolutePos(rel);
+            BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
+
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND));
+            player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
+            if (!altar.inv.getStackInSlot(0).is(Items.DIAMOND)) {
+                helper.fail("Right-clicking with a diamond should put it on the altar, altar holds " + altar.inv.getStackInSlot(0));
+                return;
+            }
+
+            player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
+            if (!player.getMainHandItem().is(Items.DIAMOND) || !altar.inv.getStackInSlot(0).isEmpty()) {
+                helper.fail("Right-clicking with an empty hand should take the diamond back, hand holds "
+                        + player.getMainHandItem() + ", altar holds " + altar.inv.getStackInSlot(0));
+                return;
+            }
+            helper.succeed();
         });
     }
 }
