@@ -1,8 +1,10 @@
 import base64
 import json
+import math
 import re
 import struct
 import sys
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -157,6 +159,179 @@ def texture_key(tex_id):
     if not p:
         return None
     return add_texture(tex_id.split(":", 1)[-1].replace("/", "_"), p)
+
+
+def add_texture_bytes(key, data, w, h):
+    TEXTURES[key] = {"src": f"data:image/png;base64,{base64.b64encode(data).decode('ascii')}", "w": w, "h": h}
+    return key
+
+
+def read_png(path):
+    raw = path.read_bytes()
+    pos = 8
+    idat = b""
+    while pos < len(raw):
+        length, kind = struct.unpack(">I4s", raw[pos : pos + 8])
+        chunk = raw[pos + 8 : pos + 8 + length]
+        if kind == b"IHDR":
+            w, h, depth, color, _, _, interlace = struct.unpack(">IIBBBBB", chunk)
+        elif kind == b"IDAT":
+            idat += chunk
+        pos += 12 + length
+    channels = {2: 3, 6: 4}.get(color)
+    if depth != 8 or not channels:
+        raise ValueError(f"{path.name}: only 8-bit RGB/RGBA PNGs are supported")
+    data = zlib.decompress(idat)
+    passes = [(0, 0, 8, 8), (4, 0, 8, 8), (0, 4, 4, 8), (2, 0, 4, 4), (0, 2, 2, 4), (1, 0, 2, 2), (0, 1, 1, 2)] if interlace else [(0, 0, 1, 1)]
+    pixels = [(0, 0, 0, 0)] * (w * h)
+    pos = 0
+    for x0, y0, dx, dy in passes:
+        pw = (w - x0 + dx - 1) // dx
+        ph = (h - y0 + dy - 1) // dy
+        if pw <= 0 or ph <= 0:
+            continue
+        stride = pw * channels
+        prev = bytearray(stride)
+        for row in range(ph):
+            f = data[pos]
+            line = bytearray(data[pos + 1 : pos + 1 + stride])
+            pos += 1 + stride
+            for i in range(stride):
+                a = line[i - channels] if i >= channels else 0
+                b = prev[i]
+                c = prev[i - channels] if i >= channels else 0
+                if f == 1:
+                    line[i] = (line[i] + a) & 255
+                elif f == 2:
+                    line[i] = (line[i] + b) & 255
+                elif f == 3:
+                    line[i] = (line[i] + (a + b) // 2) & 255
+                elif f == 4:
+                    pr = a + b - c
+                    pa, pb, pc = abs(pr - a), abs(pr - b), abs(pr - c)
+                    line[i] = (line[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+            prev = line
+            for col in range(pw):
+                px = line[col * channels : (col + 1) * channels]
+                pixels[(y0 + row * dy) * w + x0 + col * dx] = tuple(px) if channels == 4 else (*px, 255)
+    return w, h, pixels
+
+
+def write_png(w, h, pixels):
+    raw = b"".join(b"\x00" + bytes(v for px in pixels[y * w : (y + 1) * w] for v in px) for y in range(h))
+
+    def chunk(kind, body):
+        return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
+
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b"")
+
+
+def load_obj(path):
+    verts, uvs, faces = [], [], []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        parts = line.split()
+        if not parts:
+            continue
+        if parts[0] == "v":
+            verts.append(tuple(float(v) for v in parts[1:4]))
+        elif parts[0] == "vt":
+            uvs.append((float(parts[1]), float(parts[2])))
+        elif parts[0] == "f":
+            corners = []
+            for ref in parts[1:]:
+                idx = ref.split("/")
+                corners.append((verts[int(idx[0]) - 1], uvs[int(idx[1]) - 1] if len(idx) > 1 and idx[1] else (0.0, 0.0)))
+            faces.append(corners)
+    return faces
+
+
+def render_obj(faces, texture, size, flip_v):
+    tw, th, tex = texture
+    ss = 3
+    full = size * ss
+    cos30, sin30, inv2 = math.cos(math.pi / 6), math.sin(math.pi / 6), 1 / math.sqrt(2)
+
+    def project(v):
+        x, y, z = v[0] - 0.5, v[1] - 0.5, v[2] - 0.5
+        a, b = (x - z) * inv2, (x + z) * inv2
+        return a, -(y * cos30 - b * sin30), b * cos30 + y * sin30
+
+    tris = []
+    for corners in faces:
+        pts = [(project(v), uv, v) for v, uv in corners]
+        for i in range(1, len(pts) - 1):
+            tris.append((pts[0], pts[i], pts[i + 1]))
+    xs = [p[0][0] for t in tris for p in t]
+    ys = [p[0][1] for t in tris for p in t]
+    span = max(max(xs) - min(xs), max(ys) - min(ys)) * 1.08
+    ox = (min(xs) + max(xs)) / 2 - span / 2
+    oy = (min(ys) + max(ys)) / 2 - span / 2
+    scale = full / span
+    color = [None] * (full * full)
+    depth = [-1e9] * (full * full)
+    for t in tris:
+        (p0, uv0, w0), (p1, uv1, w1), (p2, uv2, w2) = t
+        e1 = [w1[i] - w0[i] for i in range(3)]
+        e2 = [w2[i] - w0[i] for i in range(3)]
+        n = (e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0])
+        mag = math.sqrt(sum(c * c for c in n)) or 1
+        nx, ny, nz = (c / mag for c in n)
+        if (nx + nz) * inv2 * cos30 + ny * sin30 <= 0.001:
+            continue
+        shade = nx * nx * 0.6 + nz * nz * 0.8 + ny * ny * (1.0 if ny > 0 else 0.5)
+        sx = [(p[0] - ox) * scale for p in (p0, p1, p2)]
+        sy = [(p[1] - oy) * scale for p in (p0, p1, p2)]
+        area = (sx[1] - sx[0]) * (sy[2] - sy[0]) - (sx[2] - sx[0]) * (sy[1] - sy[0])
+        if abs(area) < 1e-9:
+            continue
+        for py in range(max(0, int(min(sy))), min(full, int(max(sy)) + 1)):
+            cy = py + 0.5
+            for px in range(max(0, int(min(sx))), min(full, int(max(sx)) + 1)):
+                cx = px + 0.5
+                l1 = ((sx[2] - cx) * (sy[0] - cy) - (sx[0] - cx) * (sy[2] - cy)) / area
+                l2 = ((sx[0] - cx) * (sy[1] - cy) - (sx[1] - cx) * (sy[0] - cy)) / area
+                l0 = 1 - l1 - l2
+                if min(l0, l1, l2) < -1e-6:
+                    continue
+                d = l0 * p0[2] + l1 * p1[2] + l2 * p2[2]
+                i = py * full + px
+                if d <= depth[i]:
+                    continue
+                u = l0 * uv0[0] + l1 * uv1[0] + l2 * uv2[0]
+                v = l0 * uv0[1] + l1 * uv1[1] + l2 * uv2[1]
+                tx = min(tw - 1, max(0, int(u * tw)))
+                ty = min(th - 1, max(0, int((1 - v if flip_v else v) * th)))
+                r, g, b, a = tex[ty * tw + tx]
+                if a < 8:
+                    continue
+                depth[i] = d
+                color[i] = (r * shade, g * shade, b * shade)
+    out = []
+    for y in range(size):
+        for x in range(size):
+            acc = [0.0, 0.0, 0.0]
+            hits = 0
+            for dy in range(ss):
+                for dx in range(ss):
+                    c = color[(y * ss + dy) * full + x * ss + dx]
+                    if c:
+                        hits += 1
+                        for k in range(3):
+                            acc[k] += c[k]
+            if hits:
+                out.append((*(min(255, round(acc[k] / hits)) for k in range(3)), round(255 * hits / (ss * ss))))
+            else:
+                out.append((0, 0, 0, 0))
+    return out
+
+
+def obj_block_icon(model_id, size):
+    model = load_model(model_id)
+    ns, _, obj = model["model"].partition(":")
+    faces = load_obj(find_resource(Path("assets") / ns / obj))
+    texture = read_png(texture_file(model["textures"]["default"]))
+    pixels = render_obj(faces, texture, size, model.get("flip_v", False))
+    return add_texture_bytes(f"{model_id.split(':', 1)[-1].replace('/', '_')}_icon", write_png(size, size, pixels), size, size)
 
 
 def first_model_ref(node):
@@ -555,7 +730,7 @@ def build_garden():
         "paths": paths,
         "blocks": blocks,
         "types": [{"type": t, "color": c} for t, c in TYPE_COLORS.items()],
-        "incenseAltarTexture": texture_key("neovitae:block/incense_altar"),
+        "incenseAltarIcon": obj_block_icon("neovitae:block/incense_altar", 96),
     }
 
 

@@ -224,9 +224,9 @@ function draw() {
       const py = (z + MAXD) * s;
       const d = cheb(x, z);
       if (d === 0) {
-        const img = image(G.incenseAltarTexture);
+        const img = image(G.incenseAltarIcon);
         if (img && img.complete && img.naturalWidth) {
-          ctx.imageSmoothingEnabled = false;
+          ctx.imageSmoothingEnabled = true;
           ctx.drawImage(img, px, py, s, s);
         } else {
           ctx.fillStyle = "#c0283a";
@@ -664,7 +664,7 @@ function update() {
 function init() {
   if (!DATA || !DATA.garden) throw new Error("data.js is missing or out of date");
   if (DATA.modVersion) $("mod-version").textContent = `Neo Vitae ${DATA.modVersion}`;
-  const crest = texSrc(G.incenseAltarTexture);
+  const crest = texSrc(G.incenseAltarIcon);
   if (crest) $("crest").src = crest;
   readHash();
   buildViewButtons();
