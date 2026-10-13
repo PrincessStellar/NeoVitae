@@ -37,6 +37,14 @@
           "weight": 60
         },
         {
+          "entry": "minecraft:nether_quartz_ore",
+          "weight": 150
+        },
+        {
+          "entry": "minecraft:bone_block",
+          "weight": 100
+        },
+        {
           "entry": "minecraft:chiseled_polished_blackstone",
           "weight": 300
         },

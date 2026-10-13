@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import com.breakinblocks.neovitae.NeoVitae;
@@ -118,7 +117,7 @@ public class RitualMagnetism extends Ritual {
                     }
                     checks++;
 
-                    if (state.is(Tags.Blocks.ORES)) {
+                    if (state.is(NVTags.Blocks.QUARRY_BLOCKS)) {
                         if (BlockProtectionHelper.canBreakBlock(world, srcPos, owner)
                                 && moveOre(ctx, world, srcPos, state, container, masterPos, backfill, will)) {
                             oresMoved++;

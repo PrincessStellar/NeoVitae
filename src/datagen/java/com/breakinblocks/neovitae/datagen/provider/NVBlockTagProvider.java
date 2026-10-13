@@ -251,6 +251,10 @@ public class NVBlockTagProvider extends BlockTagsProvider {
                 .addOptionalTag(BlockTags.BASE_STONE_NETHER)
                 .addOptionalTag(Tags.Blocks.COBBLESTONES);
 
+        this.tag(NVTags.Blocks.QUARRY_BLOCKS)
+                .add(Blocks.GLOWSTONE, Blocks.BONE_BLOCK)
+                .addTag(Tags.Blocks.ORES);
+
         // Mushroom blocks for fungal charges
         this.tag(NVTags.Blocks.MUSHROOM_STEM)
                 .add(Blocks.CRIMSON_STEM, Blocks.WARPED_STEM,

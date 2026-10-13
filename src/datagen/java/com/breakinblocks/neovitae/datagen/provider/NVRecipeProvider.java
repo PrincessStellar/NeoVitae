@@ -4292,6 +4292,8 @@ public class NVRecipeProvider extends RecipeProvider {
                 .addLayer(new MeteorLayer(10, 0, Blocks.BLACKSTONE)
                         .addShellBlock(Blocks.GLOWSTONE)
                         .addWeightedBlock(Blocks.ANCIENT_DEBRIS, 60)
+                        .addWeightedBlock(Blocks.NETHER_QUARTZ_ORE, 150)
+                        .addWeightedBlock(Blocks.BONE_BLOCK, 100)
                         .setMinWeight(1000)
                         .addWeightedBlock(Blocks.CHISELED_POLISHED_BLACKSTONE, 300)
                         .addWeightedBlock(Blocks.GILDED_BLACKSTONE, 200)

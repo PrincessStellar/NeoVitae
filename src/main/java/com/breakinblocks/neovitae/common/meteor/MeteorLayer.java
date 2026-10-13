@@ -25,6 +25,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
+import com.breakinblocks.neovitae.common.tag.NVTags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class MeteorLayer {
             MeteorLayer::encode,
             MeteorLayer::decode
     );
+
+    private static final int ORE_ROLLS = 32;
 
     private final int layerRadius;
     private final int additionalTotalWeight;
@@ -149,7 +152,6 @@ public class MeteorLayer {
 
     public void buildLayer(Level level, BlockPos centerPos, int emptyRadius, boolean oresOnly) {
         recalculateMaxWeight(level.getRandom(), level);
-        boolean weightedOnly = oresOnly && !weightList.isEmpty();
 
         int radius = layerRadius;
         for (int i = -radius; i <= radius; i++) {
@@ -167,8 +169,11 @@ public class MeteorLayer {
                         if (!currentState.canBeReplaced(ctx)) {
                             continue;
                         }
-                        if (weightedOnly) {
-                            level.setBlockAndUpdate(pos, getRandomWeightedState(level.getRandom(), level));
+                        if (oresOnly) {
+                            BlockState ore = getRandomOreState(level.getRandom(), level);
+                            if (ore != null) {
+                                level.setBlockAndUpdate(pos, ore);
+                            }
                         } else if (shellBlock != null && checkIfSphereShell(radius, i, j, k)) {
                             Block block = shellBlock.getRandomBlock(level.getRandom(), level);
                             if (block != null) {
@@ -200,25 +205,33 @@ public class MeteorLayer {
         totalMaxWeight = Math.max(minWeight, totalMaxWeight);
     }
 
-    private BlockState getRandomWeightedState(RandomSource rand, Level level) {
+    private BlockState getRandomOreState(RandomSource rand, Level level) {
         int total = 0;
         for (var entry : weightList) {
             total += entry.getValue();
         }
-        if (total > 0) {
+        for (int roll = 0; total > 0 && roll < ORE_ROLLS; roll++) {
             int randNum = rand.nextInt(total);
             for (var entry : weightList) {
                 randNum -= entry.getValue();
                 if (randNum < 0) {
-                    Block block = entry.getKey().getRandomBlock(rand, level);
-                    if (block != null) {
-                        return block.defaultBlockState();
+                    BlockState state = quarryState(entry.getKey().getRandomBlock(rand, level));
+                    if (state != null) {
+                        return state;
                     }
                     break;
                 }
             }
         }
-        return getRandomState(rand, level);
+        return quarryState(fillBlock.getRandomBlock(rand, level));
+    }
+
+    private static BlockState quarryState(Block block) {
+        if (block == null) {
+            return null;
+        }
+        BlockState state = block.defaultBlockState();
+        return state.is(NVTags.Blocks.QUARRY_BLOCKS) ? state : null;
     }
 
     public BlockState getRandomState(RandomSource rand, Level level) {
