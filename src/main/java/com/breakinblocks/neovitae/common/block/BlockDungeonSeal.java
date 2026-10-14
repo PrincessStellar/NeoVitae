@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +49,7 @@ public class BlockDungeonSeal extends Block implements EntityBlock {
 
     public BlockDungeonSeal(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.STONE)
                 .sound(SoundType.STONE)
                 .strength(-1.0F, 3600000.0F)
                 .noLootTable()

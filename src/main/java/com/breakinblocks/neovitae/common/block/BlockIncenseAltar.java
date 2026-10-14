@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,7 @@ public class BlockIncenseAltar extends BaseEntityBlock {
 
     public BlockIncenseAltar(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.STONE)
                 .strength(2.0F, 5.0F)
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops()

@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -63,7 +64,7 @@ public class NVBlocks {
             BLOCK_REG.register("orb_filling_link", OrbFillingLinkBlock::new, defaultBlockProps());
 
     private static final BlockBehaviour.Properties rune_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 5.0F).sound(SoundType.STONE).requiresCorrectToolForDrops().lightLevel(state -> 10);
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 5.0F).sound(SoundType.STONE).requiresCorrectToolForDrops().lightLevel(state -> 10);
     }
     private static final Item.Properties rune_item_properties_src() {
         return new Item.Properties();
@@ -101,11 +102,11 @@ public class NVBlocks {
     public static final BlockWithItemHolder<Block, RuneBlockItem> RUNE_2_ORB = BASIC_REG.register("rune_2_orb", rune_properties_src(), (b, p) -> runeItem(b, p, "orb", "reinforced"));
     public static final BlockWithItemHolder<Block, RuneBlockItem> RUNE_2_EFFICIENCY = BASIC_REG.register("rune_2_efficiency", rune_properties_src(), (b, p) -> runeItem(b, p, "efficiency", "reinforced"));
 
-    public static final BlockWithItemHolder<Block, BlockItem> BLOODSTONE = BASIC_REG.register("bloodstone", rune_properties_src(), rune_item_properties_src());
-    public static final BlockWithItemHolder<Block, BlockItem> BLOODSTONE_BRICK = BASIC_REG.register("bloodstone_brick", rune_properties_src(), rune_item_properties_src());
+    public static final BlockWithItemHolder<Block, BlockItem> BLOODSTONE = BASIC_REG.register("bloodstone", rune_properties_src().mapColor(MapColor.COLOR_RED), rune_item_properties_src());
+    public static final BlockWithItemHolder<Block, BlockItem> BLOODSTONE_BRICK = BASIC_REG.register("bloodstone_brick", rune_properties_src().mapColor(MapColor.COLOR_RED), rune_item_properties_src());
 
     private static BlockBehaviour.Properties metal_block_properties_src() {
-        return BlockBehaviour.Properties.of().strength(5, 6).sound(SoundType.METAL).requiresCorrectToolForDrops();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5, 6).sound(SoundType.METAL).requiresCorrectToolForDrops();
     }
     public static final BlockWithItemHolder<Block, BlockItem> HELLFORGED_BLOCK = BASIC_REG.register("hellforged_block", metal_block_properties_src(), new Item.Properties());
     public static final BlockWithItemHolder<Block, BlockItem> RAW_DEMONITE_BLOCK = BASIC_REG.register("raw_demonite_block", metal_block_properties_src(), new Item.Properties());
@@ -131,7 +132,7 @@ public class NVBlocks {
             BLOCK_REG.register("incense_altar", BlockIncenseAltar::new, defaultBlockProps());
 
     private static BlockBehaviour.Properties tau_properties_src() {
-        return BlockBehaviour.Properties.of().noCollision().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY).randomTicks();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY).randomTicks();
     }
     public static final BlockWithItemHolder<BlockTau, BlockItem> STRONG_TAU =
             BLOCK_REG.register("strong_tau", props -> new BlockTau(props, true), tau_properties_src());
@@ -157,17 +158,17 @@ public class NVBlocks {
     public static final BlockWithItemHolder<CrystallariumMaleficumBlock, BlockItem> CRYSTALLARIUM_MALEFICUM = BLOCK_REG.register("crystallarium_maleficum", CrystallariumMaleficumBlock::new, defaultBlockProps());
     public static final BlockWithItemHolder<SpiraInfernalisBlock, BlockItem> SPIRA_INFERNALIS = BLOCK_REG.register("spira_infernalis", SpiraInfernalisBlock::new, defaultBlockProps());
 
-    private static BlockBehaviour.Properties crystal_block_properties_src() {
-        return BlockBehaviour.Properties.of().strength(3.0F, 3.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().lightLevel(state -> 7).noOcclusion();
+    private static BlockBehaviour.Properties crystal_block_properties_src(MapColor color) {
+        return BlockBehaviour.Properties.of().mapColor(color).strength(3.0F, 3.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().lightLevel(state -> 7).noOcclusion();
     }
-    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> RAW_SPIRITUS_CRYSTAL = BLOCK_REG.register("raw_spiritus_crystal", props -> new BlockSpiritusCrystal(SpiritusType.RAW, props), crystal_block_properties_src());
-    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_RUINA_CRYSTAL = BLOCK_REG.register("spiritus_ruina_crystal", props -> new BlockSpiritusCrystal(SpiritusType.RUINA, props), crystal_block_properties_src());
-    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_NIHILUM_CRYSTAL = BLOCK_REG.register("spiritus_nihilum_crystal", props -> new BlockSpiritusCrystal(SpiritusType.NIHILUM, props), crystal_block_properties_src());
-    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_VINDICTA_CRYSTAL = BLOCK_REG.register("spiritus_vindicta_crystal", props -> new BlockSpiritusCrystal(SpiritusType.VINDICTA, props), crystal_block_properties_src());
-    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_INVICTUS_CRYSTAL = BLOCK_REG.register("spiritus_invictus_crystal", props -> new BlockSpiritusCrystal(SpiritusType.INVICTUS, props), crystal_block_properties_src());
+    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> RAW_SPIRITUS_CRYSTAL = BLOCK_REG.register("raw_spiritus_crystal", props -> new BlockSpiritusCrystal(SpiritusType.RAW, props), crystal_block_properties_src(MapColor.COLOR_LIGHT_BLUE));
+    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_RUINA_CRYSTAL = BLOCK_REG.register("spiritus_ruina_crystal", props -> new BlockSpiritusCrystal(SpiritusType.RUINA, props), crystal_block_properties_src(MapColor.COLOR_LIGHT_GREEN));
+    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_NIHILUM_CRYSTAL = BLOCK_REG.register("spiritus_nihilum_crystal", props -> new BlockSpiritusCrystal(SpiritusType.NIHILUM, props), crystal_block_properties_src(MapColor.COLOR_RED));
+    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_VINDICTA_CRYSTAL = BLOCK_REG.register("spiritus_vindicta_crystal", props -> new BlockSpiritusCrystal(SpiritusType.VINDICTA, props), crystal_block_properties_src(MapColor.COLOR_PURPLE));
+    public static final BlockWithItemHolder<BlockSpiritusCrystal, BlockItem> SPIRITUS_INVICTUS_CRYSTAL = BLOCK_REG.register("spiritus_invictus_crystal", props -> new BlockSpiritusCrystal(SpiritusType.INVICTUS, props), crystal_block_properties_src(MapColor.COLOR_YELLOW));
 
     private static BlockBehaviour.Properties routing_node_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion();
     }
     public static final BlockWithItemHolder<BlockRoutingConduit, BlockItem> ROUTING_CONDUIT = BLOCK_REG.register("routing_conduit", BlockRoutingConduit::new, routing_node_properties_src());
     public static final BlockWithItemHolder<BlockInputRoutingNode, BlockItem> INPUT_ROUTING_NODE = BLOCK_REG.register("input_routing_node", BlockInputRoutingNode::new, routing_node_properties_src());
@@ -176,7 +177,7 @@ public class NVBlocks {
     public static final BlockWithItemHolder<BlockMasterRoutingNode, BlockItem> MASTER_ROUTING_NODE = BLOCK_REG.register("master_routing_node", BlockMasterRoutingNode::new, routing_node_properties_src());
 
     private static BlockBehaviour.Properties charge_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion();
     }
 
     public static final BlockWithItemHolder<BlockShapedExplosive, BlockItem> SHAPED_CHARGE = BLOCK_REG.register("shaped_charge", props -> new BlockShapedExplosive(3, props), charge_properties_src());
@@ -193,16 +194,16 @@ public class NVBlocks {
     public static final BlockWithItemHolder<BlockFungalCharge, BlockItem> FUNGAL_CHARGE_2 = BLOCK_REG.register("fungal_charge_2", props -> new BlockFungalCharge(256, props), charge_properties_src());
 
     private static BlockBehaviour.Properties mimic_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 5.0F).sound(SoundType.STONE).noOcclusion();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 5.0F).sound(SoundType.STONE).noOcclusion();
     }
     public static final BlockWithItemHolder<BlockMimic, BlockItem> MIMIC = BLOCK_REG.register("mimic", BlockMimic::new, mimic_properties_src());
     private static BlockBehaviour.Properties ethereal_mimic_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 5.0F).sound(SoundType.STONE).noOcclusion().noCollision();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 5.0F).sound(SoundType.STONE).noOcclusion().noCollision();
     }
     public static final BlockWithItemHolder<BlockMimic, BlockItem> ETHEREAL_MIMIC = BLOCK_REG.register("ethereal_mimic", BlockMimic::new, ethereal_mimic_properties_src());
 
     private static BlockBehaviour.Properties inversion_pillar_properties_src() {
-        return BlockBehaviour.Properties.of().strength(2.0F, 5.0F).sound(SoundType.STONE).requiresCorrectToolForDrops().noOcclusion();
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 5.0F).sound(SoundType.STONE).requiresCorrectToolForDrops().noOcclusion();
     }
     public static final BlockWithItemHolder<BlockInversionPillar, BlockItem> INVERSION_PILLAR = BLOCK_REG.register("inversion_pillar", BlockInversionPillar::new, inversion_pillar_properties_src());
     public static final BlockWithItemHolder<BlockInversionPillarEnd, BlockItem> INVERSION_PILLAR_CAP = BLOCK_REG.register("inversion_pillar_cap", BlockInversionPillarEnd::new, inversion_pillar_properties_src());

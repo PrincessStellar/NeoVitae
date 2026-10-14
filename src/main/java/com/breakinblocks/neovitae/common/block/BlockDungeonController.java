@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 import com.breakinblocks.neovitae.common.blockentity.NVTiles;
 import com.breakinblocks.neovitae.common.blockentity.DungeonControllerBlockEntity;
@@ -23,6 +24,7 @@ public class BlockDungeonController extends Block implements EntityBlock {
 
     public BlockDungeonController(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.STONE)
                 .sound(SoundType.STONE)
                 .strength(-1.0F, 3600000.0F)  // Unbreakable in survival
                 .noLootTable());

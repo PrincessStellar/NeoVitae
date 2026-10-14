@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,6 +41,7 @@ public class BloodTankBlock extends Block implements EntityBlock {
 
     public BloodTankBlock(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.COLOR_RED)
                 .requiresCorrectToolForDrops()
                 .strength(2.0F, 5.0F)
                 .sound(SoundType.GLASS)

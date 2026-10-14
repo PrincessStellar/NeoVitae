@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -36,6 +37,7 @@ public class AraVitaeBlock extends Block implements EntityBlock {
 
     public AraVitaeBlock(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.STONE)
                 .forceSolidOn()
                 .requiresCorrectToolForDrops()
                 .strength(2.0F, 5.0F)

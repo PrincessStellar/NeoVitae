@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -26,6 +27,7 @@ public class HellfireForgeBlock extends Block implements EntityBlock {
 
     public HellfireForgeBlock(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.NETHER)
                 .strength(2.0F, 5.0F)
                 .requiresCorrectToolForDrops());
     }

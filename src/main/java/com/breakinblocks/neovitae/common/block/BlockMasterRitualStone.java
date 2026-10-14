@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import com.breakinblocks.neovitae.common.blockentity.NVTiles;
@@ -58,6 +59,7 @@ public class BlockMasterRitualStone extends Block implements EntityBlock {
 
     public BlockMasterRitualStone(BlockBehaviour.Properties props, boolean isInverted) {
         super(props
+                .mapColor(MapColor.COLOR_BLACK)
                 .sound(SoundType.STONE)
                 .strength(2.0F, 1200.0F)
                 .requiresCorrectToolForDrops());

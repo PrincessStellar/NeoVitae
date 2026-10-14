@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -34,6 +35,7 @@ public class BlockSpatialRift extends BaseEntityBlock {
 
     public BlockSpatialRift(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.COLOR_PURPLE)
                 .strength(-1.0F, 3600000.0F)
                 .sound(SoundType.AMETHYST)
                 .lightLevel(s -> 3)

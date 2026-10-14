@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,7 +42,7 @@ public class TabulaVitaeBlock extends BaseEntityBlock {
     protected static final VoxelShape BODY = Block.box(0, 0, 0, 16, 15, 16);
 
     public TabulaVitaeBlock(BlockBehaviour.Properties properties) {
-        super(properties.strength(2.0F, 5.0F).noOcclusion().isRedstoneConductor(TabulaVitaeBlock::isntSolid).isViewBlocking(TabulaVitaeBlock::isntSolid).requiresCorrectToolForDrops());
+        super(properties.mapColor(MapColor.STONE).strength(2.0F, 5.0F).noOcclusion().isRedstoneConductor(TabulaVitaeBlock::isntSolid).isViewBlocking(TabulaVitaeBlock::isntSolid).requiresCorrectToolForDrops());
         this.registerDefaultState(this.stateDefinition.any().setValue(DIRECTION, Direction.NORTH).setValue(INVISIBLE, false));
     }
 

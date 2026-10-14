@@ -25,12 +25,14 @@ import com.breakinblocks.neovitae.util.helper.BlockProtectionHelper;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.material.MapColor;
 
 public class BlockRitualStone extends Block implements IRitualStone {
     private final EnumRuneType type;
 
     public BlockRitualStone(BlockBehaviour.Properties props, EnumRuneType type) {
         super(props
+                .mapColor(MapColor.COLOR_BLACK)
                 .strength(2.0F, 1200.0F)
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops());

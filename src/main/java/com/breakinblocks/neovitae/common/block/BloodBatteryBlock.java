@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +32,7 @@ public class BloodBatteryBlock extends Block implements EntityBlock {
 
     public BloodBatteryBlock(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.METAL)
                 .requiresCorrectToolForDrops()
                 .strength(2.0F, 5.0F)
                 .sound(SoundType.METAL)

@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import com.breakinblocks.neovitae.common.blockentity.NVTiles;
 import com.breakinblocks.neovitae.common.blockentity.SpiraInfernalisBlockEntity;
 import com.breakinblocks.neovitae.util.helper.BlockEntityHelper;
@@ -23,6 +24,7 @@ public class SpiraInfernalisBlock extends BaseEntityBlock {
 
     public SpiraInfernalisBlock(BlockBehaviour.Properties props) {
         super(props
+                .mapColor(MapColor.METAL)
                 .strength(5.0F, 6.0F)
                 .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops()
